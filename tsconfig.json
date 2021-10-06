@@ -20,11 +20,7 @@
     "noEmit": true,
     "jsx": "react-jsx",
     "types": ["vite/client"],
-    "jsxImportSource": "@emotion/react",
-    "typeRoots": [
-      "node_modules/@types",
-      "src/libs.d.ts"
-    ]
+    "jsxImportSource": "@emotion/react"
   },
   "include": ["src", "types"]
 }
