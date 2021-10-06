@@ -48,9 +48,11 @@ const reducers = {
 
 const combinedReducer = combineReducers<typeof reducers>(reducers)
 
-export const rootReducer: Reducer<RootState> = (state, action) => {
+export type RootState = ReturnType<typeof store.getState>
+
+export const rootReducer: Reducer = (state, action) => {
   if (action.type === RESET_STATE_ACTION_TYPE) {
-    state = {} as RootState
+    state = {}
   }
 
   return combinedReducer(state, action)
@@ -71,5 +73,4 @@ export const persistor = persistStore(store)
 
 export type AppDispatch = typeof store.dispatch
 export const useAppDispatch = () => useDispatch<AppDispatch>()
-export type RootState = ReturnType<typeof store.getState>
 export const useTypedSelector: TypedUseSelectorHook<RootState> = useSelector
