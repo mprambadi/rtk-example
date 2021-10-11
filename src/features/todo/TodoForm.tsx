@@ -5,6 +5,7 @@ import { Todo, useAddTodoMutation } from '../../app/services/todo'
 import { Button, ErrorForm, Form, Input } from '../../components'
 import Loading from '../../components/Loading'
 import 'twin.macro'
+import toast from 'react-hot-toast'
 
 const TodoForm = () => {
   const [todoForm, setTodoForm] = useImmer<Partial<Todo>>({
@@ -15,10 +16,10 @@ const TodoForm = () => {
   const [addTodo, { isLoading, isError, error }] = useAddTodoMutation()
   const onSubmit = (e: FormEvent) => {
     e.preventDefault()
-    // if(!todoForm.title?.trim()){
-    //     toast("title could not empty")
-    //     return
-    // }
+    if(!todoForm.title?.trim()){
+        toast("title could not empty")
+        return
+    }
     addTodo(todoForm)
     setTodoForm(draft => {
       draft.title = ''
@@ -33,9 +34,6 @@ const TodoForm = () => {
 
   return (
     <Form onSubmit={onSubmit}>
-      <ErrorForm error={error?.data?.data.title}>
-        {error?.data?.data.title}
-      </ErrorForm>
       <Input
         autoComplete="off"
         name="title"
