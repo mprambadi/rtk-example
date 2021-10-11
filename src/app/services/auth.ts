@@ -8,6 +8,23 @@ export interface BaseResponse<T> {
   message: string
 }
 
+export interface Link {
+  first: string
+  last: string
+  prev: string
+  next: string
+}
+
+export interface Meta {
+  path: string
+  per_page: string
+}
+export interface BaseResponseList<T> {
+  data: T
+  links: Partial<Link>
+  meta: Partial<Meta>
+}
+
 export interface User {
   email: string
   password: string

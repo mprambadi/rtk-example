@@ -4,10 +4,11 @@ import { todoApi } from './services/todo'
 
 import {
   MiddlewareAPI,
-  isRejectedWithValue,
+  isRejected,
   Middleware,
   combineReducers,
   configureStore,
+  isRejectedWithValue,
 } from '@reduxjs/toolkit'
 import {
   FLUSH,
@@ -19,22 +20,22 @@ import {
   persistStore,
 } from 'redux-persist'
 import authSlice, { authReducer } from '../features/auth/authSlice'
-import { Reducer } from 'redux';
+import { Reducer } from 'redux'
 
+import { createAction } from '@reduxjs/toolkit'
+import toast from 'react-hot-toast'
 
-import { createAction } from '@reduxjs/toolkit';
-
-export const RESET_STATE_ACTION_TYPE = 'resetState';
+export const RESET_STATE_ACTION_TYPE = 'resetState'
 export const resetStateAction = createAction(RESET_STATE_ACTION_TYPE, () => {
-  return { payload: null };
-});
-
+  return { payload: null }
+})
 
 /**
  * Log a warning and show a toast!
  */
 export const rtkQueryErrorLogger: Middleware = () => next => action => {
   if (isRejectedWithValue(action)) {
+    toast.error(action.payload?.data?.message)
   }
 
   return next(action)
@@ -43,7 +44,7 @@ export const rtkQueryErrorLogger: Middleware = () => next => action => {
 const reducers = {
   [todoApi.reducerPath]: todoApi.reducer,
   [authApi.reducerPath]: authApi.reducer,
-  [authSlice.name]: authReducer
+  [authSlice.name]: authReducer,
 }
 
 const combinedReducer = combineReducers<typeof reducers>(reducers)
@@ -57,7 +58,6 @@ export const rootReducer: Reducer = (state, action) => {
 
   return combinedReducer(state, action)
 }
-
 
 export const store = configureStore({
   reducer: rootReducer,

@@ -1,43 +1,55 @@
-import React, { useState } from 'react'
 import { useLoginMutation } from '../../app/services/auth'
-import { useHistory, useLocation } from 'react-router'
+import { useImmer } from 'use-immer'
+import { Button, Form, Input } from '../../components'
+import Loading from '../../components/Loading'
+import { FormEvent } from 'react'
+
+type LoginState = {
+  email: string
+  password: string
+}
 
 const Login = () => {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+  const [{ email, password }, setLogin] = useImmer<LoginState>({
+    email: '',
+    password: '',
+  })
 
   const [loginAction, { isLoading, isError }] = useLoginMutation()
 
-  const loggedIn = async () => {
-    await loginAction({ email, password })
+  const loggedIn = (e: FormEvent) => {
+    e.preventDefault()
+    loginAction({ email, password })
   }
 
   return (
-    <div>
-      <div>
-        <input
-          name="email"
-          type="text"
-          className="p-2 border-2 bg-yellow-400"
-          onChange={({ target: { value } }) => {
-            setEmail(value)
-          }}
-        />
-      </div>
-      <div>
-        <input
-          name="password"
-          type="text"
-          onChange={({ target: { value } }) => {
-            setPassword(value)
-          }}
-        />
-      </div>
-
-      <div>
-        <button onClick={loggedIn}>Login</button>
-      </div>
-    </div>
+    <Form onSubmit={loggedIn}>
+      <Input
+        name="email"
+        type="text"
+        placeholder="email"
+        className="p-2 border-2 bg-yellow-400"
+        onChange={({ target: { value } }) => {
+          setLogin(draft => {
+            draft.email = value
+          })
+        }}
+      />
+      <Input
+        name="password"
+        type="password"
+        placeholder="password"
+        onChange={({ target: { value } }) => {
+          setLogin(draft => {
+            draft.password = value
+          })
+        }}
+      />
+      <Button isLoading={isLoading} type="submit">
+        <Loading />
+        Login
+      </Button>
+    </Form>
   )
 }
 

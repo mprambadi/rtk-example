@@ -11,13 +11,12 @@ import { Button } from './components'
 import { useSelector } from 'react-redux'
 import { logout, selectIsAuthenticated } from './features/auth/authSlice'
 import { useAppDispatch } from './app/store'
+import Loading from './components/Loading'
+import { Toaster } from 'react-hot-toast'
 
 const styles = {
   // Move long class sets out of jsx to keep it scannable
-  container: ({ hasBackground }: { hasBackground: boolean }) => [
-    tw`flex flex-col items-center justify-center h-full`,
-    hasBackground && tw`bg-gradient-to-b from-electric to-ribbon`,
-  ],
+  container: [tw`flex flex-col items-center justify-center h-full`],
 }
 
 const App = () => {
@@ -25,9 +24,11 @@ const App = () => {
   const dispatch = useAppDispatch()
   const auth = useSelector(selectIsAuthenticated)
   return (
-    <div css={styles.container({ hasBackground: true })}>
+    <div css={styles.container}>
+
+      <Toaster />
       {auth && (
-        <div>
+        <div tw="flex flex-row">
           <Button onClick={() => history.push('/todo')} variant="secondary">
             todo
           </Button>
@@ -38,14 +39,12 @@ const App = () => {
             dashboard
           </Button>
 
-          <Button
-            onClick={() => dispatch(logout())}
-            variant="primary"
-          >
-            logout
+          <Button onClick={() => dispatch(logout())} variant="primary">
+            <Loading /> logout
           </Button>
         </div>
       )}
+
       <Switch>
         <AuthenticatedRoute path="/login" onlyPublic>
           <Login />
