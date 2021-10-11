@@ -22,6 +22,7 @@ const TodoList: React.FC<{}> = () => {
     return <div>{JSON.stringify(error)}</div>
   }
 
+  return (
     <div>
       <TodoForm />
       {data?.data?.map(todo => (
